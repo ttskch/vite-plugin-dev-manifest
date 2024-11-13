@@ -8,6 +8,7 @@ export interface ManifestPluginConfig {
     manifestName?: string;
 	delay?: number;
 	clearOnClose?: boolean
+	url?: string;
 }
 
 export interface PluginManifest {
@@ -37,7 +38,7 @@ const createSimplifyPath = (root: string, base: string) => (path: string) => {
 	return path;
 };
 
-const plugin = ({ omitInputs = [], manifestName = MANIFEST_NAME, delay, clearOnClose = true }: ManifestPluginConfig = {}): Plugin => ({
+const plugin = ({ omitInputs = [], manifestName = MANIFEST_NAME, delay, clearOnClose = true, url }: ManifestPluginConfig = {}): Plugin => ({
 	name: 'dev-manifest',
 	enforce: 'post',
 
@@ -54,7 +55,7 @@ const plugin = ({ omitInputs = [], manifestName = MANIFEST_NAME, delay, clearOnC
 			const protocol = config.server.https ? 'https' : 'http';
 			const host = resolveHost(config.server.host);
 			const port = config.server.port;
-			const url = `${protocol}://${host}:${port}${base}`;
+			url ??= `${protocol}://${host}:${port}${base}`;
 			const manifest: PluginManifest = {
 				url,
 				inputs: {},
